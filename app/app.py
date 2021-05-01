@@ -95,19 +95,37 @@ def api_retrieve(crash_id) -> str:
 
 @app.route('/api/v1/crashes/<int:crash_id>', methods=['PUT'])
 def api_edit(crash_id) -> str:
-    resp = Response(status=201, mimetype='application/json')
+    cursor = mysql.get_db().cursor()
+    content = request.json
+    inputData = (content['Day_of_Week'], content['Number_of_Crashes'],crash_id)
+    sql_update_query = """UPDATE crash_catalonia t SET t.Day_of_Week = %s, t.Number_of_Crashes =%s WHERE t.id = %s """
+    cursor.execute(sql_update_query, inputData)
+    mysql.get_db().commit()
+    resp = Response(status=200, mimetype='application/json')
     return resp
 
 
 @app.route('/api/v1/crashes/', methods=['POST'])
 def api_add() -> str:
+
+    content = request.json
+
+    cursor = mysql.get_db().cursor()
+    inputData = (content['Day_of_Week'], request.form.get('Number_of_Crashes'))
+    sql_insert_query = """INSERT INTO crash_catalonia (Day_of_Week, Number_of_Crashes) VALUES (%s, %s,%s, %s,%s, %s,%s) """
+    cursor.execute(sql_insert_query, inputData)
+    mysql.get_db().commit()
     resp = Response(status=201, mimetype='application/json')
     return resp
 
 
 @app.route('/api/crashes/<int:crash_id>', methods=['DELETE'])
 def api_delete(crash_id) -> str:
-    resp = Response(status=210, mimetype='application/json')
+    cursor = mysql.get_db().cursor()
+    sql_delete_query = """DELETE FROM crash_catalonia WHERE id = %s """
+    cursor.execute(sql_delete_query, crash_id)
+    mysql.get_db().commit()
+    resp = Response(status=200, mimetype='application/json')
     return resp
 
 
