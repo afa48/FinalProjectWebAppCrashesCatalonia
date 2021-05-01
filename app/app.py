@@ -93,14 +93,14 @@ def api_retrieve(crash_id) -> str:
     return resp
 
 
-@app.route('/api/v1/crashes/', methods=['POST'])
-def api_add() -> str:
+@app.route('/api/v1/crashes/<int:crash_id>', methods=['PUT'])
+def api_edit(crash_id) -> str:
     resp = Response(status=201, mimetype='application/json')
     return resp
 
 
-@app.route('/api/v1/crashes/<int:crash_id>', methods=['PUT'])
-def api_edit(crash_id) -> str:
+@app.route('/api/v1/crashes/', methods=['POST'])
+def api_add() -> str:
     resp = Response(status=201, mimetype='application/json')
     return resp
 
