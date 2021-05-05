@@ -105,21 +105,21 @@ def api_edit(crash_id) -> str:
     return resp
 
 
-@app.route('/api/v1/crashes/', methods=['POST'])
+@app.route('/api/v1/crashes', methods=['POST'])
 def api_add() -> str:
 
     content = request.json
 
     cursor = mysql.get_db().cursor()
     inputData = (content['Day_of_Week'], request.form.get('Number_of_Crashes'))
-    sql_insert_query = """INSERT INTO crash_catalonia (Day_of_Week, Number_of_Crashes) VALUES (%s, %s,%s, %s,%s, %s,%s) """
+    sql_insert_query = """INSERT INTO crash_catalonia (Day_of_Week, Number_of_Crashes) VALUES (%s, %s) """
     cursor.execute(sql_insert_query, inputData)
     mysql.get_db().commit()
     resp = Response(status=201, mimetype='application/json')
     return resp
 
 
-@app.route('/api/crashes/<int:crash_id>', methods=['DELETE'])
+@app.route('/api/v1/crashes/<int:crash_id>', methods=['DELETE'])
 def api_delete(crash_id) -> str:
     cursor = mysql.get_db().cursor()
     sql_delete_query = """DELETE FROM crash_catalonia WHERE id = %s """
